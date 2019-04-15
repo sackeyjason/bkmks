@@ -201,7 +201,7 @@ function renderPagination() {
     if (currentPage < pageCount) {
         markup += '<a href="' + (currentPage + 1) + '">&gt;</a>';
     } else {
-        markup += '<span>&lt;</span>';
+        markup += '<span>&gt;</span>';
     }
     $('#pagination')[0].innerHTML = markup;
 }
