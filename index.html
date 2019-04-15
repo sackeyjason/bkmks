@@ -5,8 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Jason Sackey Bookmarks</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
+    <form id="add-link" class="add-link-form">
+        <label for="link-url">Link URL</label>
+        <div class="link-field-wrapper">
+            <input type="text" id="link-url" placeholder="http://bing.com">
+            <span class="error"></span>
+        </div>
+        <button>Add link</button>
+    </form>
+
+    <article>
+        <div id="links-list"></div>
+        
+    </article>
+    <div id="pagination"></div>
+    <div id="results">
+        <article>
+            <h2>Thanks for your submission!</h2>
+            <div id="submission"></div>
+            <p>
+                <a href='#'>Back to overview</a>
+            </p>
+        </article>
+    </div>
+    <script src="app.js"></script>
 </body>
 </html>
