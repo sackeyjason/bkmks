@@ -155,15 +155,9 @@ function checkExistsUrl(url, callback) {
 }
 
 function isValidURL(str) {
-    // Validation function based on https://stackoverflow.com/questions/5717093/check-if-a-javascript-string-is-a-url
-    var a  = document.createElement('a');
-    a.href = str;
-    if (a.host.indexOf('.') >= 1) {
-        // Reject 'urls' without dots
-        return (a.host && a.host != window.location.host);
-    } else {
-        return false;
-    }
+    // check for http/https://, and something-dot-something
+    // (something: not . or #)
+    return (str.match(/https?:\/\/[^\.#]+\.[^\.#]+/));
 }
 
 function renderLinks() {
