@@ -137,8 +137,10 @@ function submitForm(event) {
 
 function addLink(url) {
     $('#submission')[0].innerHTML = url;
+    // Show results page: unhide the #results div with css
     document.location.hash = 'results';
     currentPage = 1;
+    // Append new url to start of links.
     links = [url].concat(links);
     localStorage.links = JSON.stringify(links);
     $('#link-url')[0].value = '';
@@ -153,48 +155,61 @@ function checkExistsUrl(url, callback) {
 }
 
 function isValidURL(str) {
-    // stolen from https://stackoverflow.com/questions/5717093/check-if-a-javascript-string-is-a-url
+    // Validation function based on https://stackoverflow.com/questions/5717093/check-if-a-javascript-string-is-a-url
     var a  = document.createElement('a');
     a.href = str;
-    return (a.host && a.host != window.location.host);
+    if (a.host.indexOf('.') >= 1) {
+        // Reject 'urls' without dots
+        return (a.host && a.host != window.location.host);
+    } else {
+        return false;
+    }
 }
 
 function renderLinks() {
+    // Render visible links as unordered list of links
+    // Set the start and end of current page of links according to pagination
     let markup = '<ul>';
     const offset = (currentPage - 1) * linksPerPage;
     const linkPage = links.slice(offset, offset + linksPerPage);
     linkPage.forEach(link => {
         markup += `<li><a target="_blank" href="${link}">${link}</a></li>`;
     });
-    markup += '</ol>';
+    markup += '</ul>';
     $('#links-list')[0].innerHTML = markup;
 }
 
 function renderPagination() {
+    // UI for navigating between pages
     let markup = '';
     const pageCount = Math.ceil(links.length / linksPerPage);
-    markup += '<a href="#prev">&lt;</a>';
-    for (let i = 1; i <= pageCount; i++) {
-        markup += `<a class="${i === currentPage ? 'current' : ''}" href="${i}">${i}</a>`;
+
+    // Prevent prev/next moving out of bounds
+    if (currentPage > 1) {
+        markup += '<a href="' + (currentPage - 1) + '">&lt;</a>';
+    } else {
+        markup += '<span>&lt;</span>';
     }
-    markup += '<a href="#next">&gt;</a>';
+
+    for (let i = 1; i <= pageCount; i++) {
+        // No link for current page
+        markup += i === currentPage ?
+            '<span class="current">' + i + '</span>' :
+            `<a href="${i}">${i}</a>`;
+    }
+
+    if (currentPage < pageCount) {
+        markup += '<a href="' + (currentPage + 1) + '">&gt;</a>';
+    } else {
+        markup += '<span>&lt;</span>';
+    }
     $('#pagination')[0].innerHTML = markup;
 }
 
 function paginationClick(event) {
-    const pageCount = Math.ceil(links.length / linksPerPage);
     if (event.target.nodeName === 'A') {
         event.preventDefault();
         let targetPage = parseInt(event.target.getAttribute('href'));
-        if (!targetPage) {
-            if (event.target.getAttribute('href') === '#prev') {
-                targetPage = currentPage - 1;
-            } else {
-                targetPage = currentPage + 1;
-            }
-            if (targetPage <= 0) return;
-            if (targetPage > pageCount) return;
-        }
         currentPage = targetPage;
         renderLinks();
         renderPagination();
@@ -203,6 +218,7 @@ function paginationClick(event) {
 
 function init() {
     if (!localStorage.links) {
+        // Populate localstorage if empty
         localStorage.links = JSON.stringify(defaultLinks);
     }
     links = JSON.parse(localStorage.links);
@@ -210,6 +226,10 @@ function init() {
     $('#pagination')[0].addEventListener('click', paginationClick);
     renderLinks();
     renderPagination();
+    // Reload while on results page -> back to main view
+    if (document.location.hash = 'results') {
+        document.location.hash = '';
+    }
 }
 
 init();

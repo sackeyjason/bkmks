@@ -25,7 +25,11 @@ a {
     padding: 1rem;
     display: flex;
     align-items: flex-start;
-    background: darkseagreen;
+    background: #111;
+    color: #fff;
+}
+.add-link-form label {
+    margin: .4rem .5rem 0 0;
 }
 
 .link-field-wrapper {
@@ -55,7 +59,8 @@ li::before {
     padding: 2rem;
     text-align: center;
 }
-#pagination a {
+#pagination a,
+#pagination span {
     margin: 0 0.25rem;
 }
 .current {
